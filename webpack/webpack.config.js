@@ -8,7 +8,9 @@ module.exports = {
   },
   output: {
     path: path.resolve('dist'),
-    filename: '[name].js'
+    filename: '[name].js',
+    library: "scrype",
+    libraryTarget: "umd"
   },
   plugins: [
   ],
@@ -24,14 +26,5 @@ module.exports = {
       },
     ]
   },
-  mode: 'production',
-  optimization: {
-    minimizer: [new UglifyJsPlugin({
-      uglifyOptions: {
-        output: {
-          comments: false,
-        },
-      },
-    })],
-  },
+  mode: 'production'
 };
