@@ -2,7 +2,7 @@
   "name": "scrype",
   "version": "1.0.0",
   "description": "Scrype allows you to present code snippet in a interesting way",
-  "main": "index.js",
+  "main": "dist/scrype.js",
   "scripts": {
     "dev": "webpack --config webpack/webpack.config.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
