@@ -1,17 +1,21 @@
 {
   "name": "scrype",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Scrype allows you to present code snippet in a interesting way",
   "main": "dist/scrype.js",
   "scripts": {
-    "dev": "webpack --config webpack/webpack.config.js --watch",
+    "dev": "webpack --config webpack/webpack.config.dev.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "webpack -p --progress --mode production --config webpack/webpack.config.js"
+    "build": "webpack -p --progress --mode production --config webpack/webpack.config.build.js"
   },
   "keywords": [
     "scroll",
     "scrype"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DevChanQ/Scrype.git"
+  },
   "author": "DevJeff",
   "license": "MIT",
   "devDependencies": {
@@ -19,6 +23,7 @@
     "babel-loader": "^8.0.6",
     "uglifyjs-webpack-plugin": "^1.0.0-rc.0",
     "webpack": "^4.35.0",
-    "webpack-cli": "^3.3.4"
+    "webpack-cli": "^3.3.4",
+    "webpack-merge": "^4.2.1"
   }
 }

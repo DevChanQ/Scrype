@@ -28,7 +28,7 @@ export default class Scrype {
           item.style.cssText = `position: sticky;position: -webkit-sticky;top: calc(50% - ${item.clientHeight/2}px);`
           break;
         case 'bottom':
-          item.style.cssText = `position: sticky;position: -webkit-sticky;top: calc(100% - ${item.clientHeight+100}px);`
+          item.style.cssText = `position: sticky;position: -webkit-sticky;top: calc(100% - ${item.clientHeight+50}px);`
           break;
         case 'top':
           item.style.cssText = `position: sticky;position: -webkit-sticky;top: 30px;);`
@@ -50,7 +50,6 @@ export default class Scrype {
     let item = document.createElement("div");
     item.className = 'scrype__item';
     item.innerHTML = ele.innerHTML;
-    setTimeout(setItemPosition, 0)
 
     // create snippet container
     let snippet = document.createElement("div");
@@ -88,6 +87,7 @@ export default class Scrype {
 
     container.style.height = window.innerHeight + totalPixel + padding
 
+    window.addEventListener('load', setItemPosition)
     window.addEventListener('scroll', onScroll)
   }
 };
