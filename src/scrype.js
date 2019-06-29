@@ -1,8 +1,9 @@
 import replace_javascript from './replacer/javascript'
 
 export default class Scrype {
-  constructor (selector, {code, codeContainerSelector = null, position = 'top', pixelPerStep = 20, padding = 0, removeCharacter = '~'}) {
-    let ele = document.querySelector(selector)
+  constructor (selector, {code = "null", onProgress = () => {}, codeContainerSelector = null, position = 'top', pixelPerStep = 20, padding = 0, removeCharacter = '~'}) {
+    let ele = typeof selector === 'string' ? document.querySelector(selector) : selector
+    let noMore = false
 
     function replaceCode(c, character) {
       var index = c.indexOf(character)
@@ -17,9 +18,19 @@ export default class Scrype {
     function onScroll() {
       currentStep = Math.max(window.pageYOffset - container.offsetTop, 0)
       var pos = Math.floor(currentStep / pixelPerStep)
-      var chars = replace_javascript(replaceCode(code.slice(0, pos), '~'))
-
-      codeEle.innerHTML = '> ' + chars + '_'
+      if (pos > code.length) {
+        if (!noMore) {
+          var chars = replace_javascript(replaceCode(code, '~'))
+          codeEle.innerHTML = '> ' + chars + '_'
+          onProgress(100)
+          noMore = true
+        }
+      } else {
+        noMore = false
+        var chars = replace_javascript(replaceCode(code.slice(0, pos), '~'))
+        onProgress(Math.round(pos/code.length*100))
+        codeEle.innerHTML = '> ' + chars + '_'
+      }
     }
 
     function setItemPosition() {
@@ -31,9 +42,10 @@ export default class Scrype {
           item.style.cssText = `position: sticky;position: -webkit-sticky;top: calc(100% - ${item.clientHeight+50}px);`
           break;
         case 'top':
-          item.style.cssText = `position: sticky;position: -webkit-sticky;top: 30px;);`
+          item.style.cssText = `position: sticky;position: -webkit-sticky;top: 0;);`
           break;
         default:
+          item.style.cssText = `position: sticky;position: -webkit-sticky;top: 0;);`
           break;
       }
     }
@@ -62,11 +74,11 @@ export default class Scrype {
 
     // create code element
     let codeEle = document.createElement("code");
-    codeEle.style.cssText = "color: white;white-space: pre-wrap;position: absolute; top: 0; left: 0;right: 0;bottom: 0;";
+    codeEle.style.cssText = "color: white;white-space: pre;position: absolute; top: 0; left: 0;right: 0;bottom: 0;";
 
     // create code placeholder element
     let placeholder = document.createElement("code");
-    placeholder.style.cssText = "white-space: pre-wrap;opacity: 0;";
+    placeholder.style.cssText = "white-space: pre;opacity: 0;";
     placeholder.innerHTML = replaceCode(code, '~');
 
     // setup element
@@ -87,7 +99,8 @@ export default class Scrype {
 
     container.style.height = window.innerHeight + totalPixel + padding
 
-    window.addEventListener('load', setItemPosition)
+    // Event Listeners
+    setItemPosition()
     window.addEventListener('scroll', onScroll)
   }
 };

@@ -1,6 +1,6 @@
 {
   "name": "scrype",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Scrype allows you to present code snippet in a interesting way",
   "main": "dist/scrype.js",
   "scripts": {
