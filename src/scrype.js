@@ -102,5 +102,6 @@ export default class Scrype {
     // Event Listeners
     setItemPosition()
     window.addEventListener('scroll', onScroll)
+    onScroll()
   }
 };
