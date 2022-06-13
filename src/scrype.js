@@ -66,7 +66,7 @@ export default class Scrype {
     // create snippet container
     let snippet = document.createElement("div");
     snippet.className = 'scrype__snippet';
-    snippet.style.cssText = "border-radius: 6px;padding: 16px;background: black;font-family: SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;";
+    snippet.style.cssText = "border-radius: 6px;padding: 16px;font-family: SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;";
 
     // create code container
     let codeContainer = document.createElement('div');
@@ -96,8 +96,8 @@ export default class Scrype {
 
     ele.innerHTML = ''
     ele.appendChild(container)
-
-    container.style.height = window.innerHeight + totalPixel + padding
+    
+    container.style.height = `${window.innerHeight + totalPixel + padding}px`
 
     // Event Listeners
     setItemPosition()
