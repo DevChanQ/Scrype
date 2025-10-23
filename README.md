@@ -1,8 +1,10 @@
 # Scrype
 
-### [Live Demo](https://devjeff.info)
+### [Live Demo](https://devjeff.info/scrype)
 
 Scrype is a library that allows you to present code snippet in an interesting way
+
+![Scrype Demo](/assets/example.gif)
 
 ## *Installation*
 
