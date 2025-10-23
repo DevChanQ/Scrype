@@ -4,7 +4,7 @@
 
 Scrype is a library that allows you to present code snippet in an interesting way
 
-<img src="/assets/example.gif" alt="Scrype Demo" style="max-width:360px; width:100%; height:auto;" />
+<img src="/assets/example.gif" alt="Scrype Demo" width="250" />
 
 ## *Installation*
 
