@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "rootDir": "./src",
+    "target": "es6",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "composite": true,
+    "declarationDir": "dist/types"
+  },
+  "include": [
+    "./src/**/*"
+  ],
+  "exclude": [
+    "**/node_modules"
+  ],
+}
