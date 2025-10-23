@@ -1,6 +1,6 @@
 {
   "name": "scrype",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Scrype allows you to present code snippet in a interesting way",
   "main": "./dist/scrype.cjs.js",
   "module": "./dist/scrype.esm.js",
