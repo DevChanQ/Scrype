@@ -10,8 +10,6 @@ export interface ScrypeOptions {
   removeCharacter?: string;
 }
 
-console.log("Scrype v1.0.0");
-
 export default class Scrype {
   constructor(selector: string | HTMLElement, options: ScrypeOptions = {}) {
     const {
