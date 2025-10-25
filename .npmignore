@@ -1,0 +1,8 @@
+node_modules/
+.vscode/
+src/
+assets/
+configs/
+*.config.mjs
+tests/
+tsconfig.json

@@ -1,6 +1,6 @@
 {
   "name": "scrype",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "Scrype allows you to present code snippet in a interesting way",
   "exports": {
     ".": {
@@ -15,7 +15,8 @@
     "build": "rollup -c configs/rollup.config.mjs",
     "lint": "eslint --ext .ts,.mjs ./",
     "lint:fix": "eslint --ext .ts,.mjs --fix ./",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "release": "npm run build && npm publish --access public"
   },
   "keywords": [
     "scroll",
