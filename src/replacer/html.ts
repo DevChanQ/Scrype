@@ -1,11 +1,11 @@
 import hljs from "highlight.js/lib/core";
-import javascript from "highlight.js/lib/languages/javascript";
+import html from "highlight.js/lib/languages/vbscript-html";
 
-hljs.registerLanguage("javascript", javascript);
+hljs.registerLanguage("html", html);
 
 const replacer = (code: string): string => {
   const res = hljs.highlight(code, {
-    language: "javascript",
+    language: "html",
   });
 
   const highlightedCode = res.value;

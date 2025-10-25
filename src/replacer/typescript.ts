@@ -1,11 +1,11 @@
 import hljs from "highlight.js/lib/core";
-import javascript from "highlight.js/lib/languages/javascript";
+import typescript from "highlight.js/lib/languages/typescript";
 
-hljs.registerLanguage("javascript", javascript);
+hljs.registerLanguage("typescript", typescript);
 
 const replacer = (code: string): string => {
   const res = hljs.highlight(code, {
-    language: "javascript",
+    language: "typescript",
   });
 
   const highlightedCode = res.value;

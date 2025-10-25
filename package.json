@@ -2,12 +2,17 @@
   "name": "scrype",
   "version": "1.1.0",
   "description": "Scrype allows you to present code snippet in a interesting way",
-  "main": "./dist/scrype.cjs.js",
-  "module": "./dist/scrype.esm.js",
-  "types": "./dist/types/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/scrype.esm.js",
+      "require": "./dist/scrype.cjs.js",
+      "types": "./dist/types/index.d.ts"
+    },
+    "./themes/*": "./dist/themes/*"
+  },
   "scripts": {
-    "start": "rollup -c rollup.config.dev.mjs -w",
-    "build": "rollup -c rollup.config.mjs",
+    "start": "rollup -c configs/rollup.config.dev.mjs -w",
+    "build": "rollup -c configs/rollup.config.mjs",
     "lint": "eslint --ext .ts,.mjs ./",
     "lint:fix": "eslint --ext .ts,.mjs --fix ./",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -27,12 +32,18 @@
     "@rollup/plugin-commonjs": "^28.0.8",
     "@rollup/plugin-node-resolve": "^16.0.3",
     "@rollup/plugin-terser": "^0.4.4",
+    "@types/minimatch": "3.0.5",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "glob": "^11.0.3",
     "rollup": "^4.52.5",
+    "rollup-plugin-copy": "^3.5.0",
     "rollup-plugin-typescript2": "^0.36.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.46.2"
+  },
+  "dependencies": {
+    "highlight.js": "^11.11.1"
   }
 }

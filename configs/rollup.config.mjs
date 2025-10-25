@@ -1,26 +1,11 @@
-import typescript from "rollup-plugin-typescript2";
 import terser from "@rollup/plugin-terser";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 
-const tsPlugin = typescript({
-  tsconfig: "./tsconfig.json",
-  useTsconfigDeclarationDir: true,
-});
-
-const commonPlugins = [tsPlugin];
+import defaultConfig, { tsPlugin } from "./common";
 
 export default [
-  // CommonJS & ESM build - externalize dependencies
-  {
-    input: "src/index.ts",
-    output: [
-      { file: "dist/scrype.cjs.js", format: "cjs" },
-      { file: "dist/scrype.esm.js", format: "es" },
-    ],
-    watch: { include: "src/**" },
-    plugins: commonPlugins,
-  },
+  ...defaultConfig,
 
   // Browser build - bundle everything (include nodeResolve + commonjs + polyfills)
   {
@@ -37,7 +22,7 @@ export default [
       },
     ],
     plugins: [
-      ...commonPlugins,
+      tsPlugin,
       nodeResolve({ browser: true, preferBuiltins: false }),
       commonjs(),
       terser(),

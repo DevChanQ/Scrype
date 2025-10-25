@@ -1,7 +1,19 @@
-import replace_javascript from "./replacer/javascript";
+import typescript_replacer from "./replacer/typescript";
+import javascript_replacer from "./replacer/javascript";
+import html_replacer from "./replacer/html";
+
+/**
+ * Turn code at any given point during a scroll to highlighted version of itself.
+ * Highlighted code string should be in HTML format.
+ * @param code The original code string.
+ * @returns The highlighted code string.
+ */
+export type Replacer = (code: string) => string;
 
 export interface ScrypeOptions {
+  lang?: "typescript" | "javascript" | "html";
   code?: string;
+  replacer?: Replacer;
   onProgress?: (progress: number) => void;
   codeContainerSelector?: string | null;
   position?: "top" | "center" | "bottom";
@@ -20,7 +32,27 @@ export default class Scrype {
       pixelPerStep = 20,
       padding = 0,
       removeCharacter = "~",
+      replacer: providedReplacer,
     } = options;
+
+    let replacer: Replacer = providedReplacer;
+    if (!replacer) {
+      switch (options.lang) {
+        case "typescript":
+          replacer = typescript_replacer;
+          break;
+        case "javascript":
+          replacer = javascript_replacer;
+          break;
+        case "html":
+          replacer = html_replacer;
+          break;
+        default:
+          throw new Error(
+            "Please provide a valid language or a custom replacer function.",
+          );
+      }
+    }
 
     const ele =
       typeof selector === "string"
@@ -44,18 +76,18 @@ export default class Scrype {
       const pos = Math.floor(currentStep / pixelPerStep);
       if (pos > code.length) {
         if (!noMore) {
-          const chars = replace_javascript(replaceCode(code, removeCharacter));
-          codeEle.innerHTML = "> " + chars + "_";
+          const chars = replacer(replaceCode(code, removeCharacter));
+          codeEle.innerHTML = chars + "_";
           onProgress(100);
           noMore = true;
         }
       } else {
         noMore = false;
-        const chars = replace_javascript(
+        const chars = replacer(
           replaceCode(code.slice(0, pos), removeCharacter),
         );
         onProgress(Math.round((pos / code.length) * 100));
-        codeEle.innerHTML = "> " + chars + "_";
+        codeEle.innerHTML = chars + "_";
       }
     }
 
@@ -78,7 +110,6 @@ export default class Scrype {
 
     const totalPixel = code.length * pixelPerStep;
     let currentStep = 0;
-    // let lastPos = 0;
 
     // create container
     const container = document.createElement("div");
