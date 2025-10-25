@@ -117,6 +117,25 @@ const options: ScrypeOptions = {
 };
 ```
 
+### Using Highlight.js for Custom Languages
+
+For languages not natively supported, we recommend using [Highlight.js](https://highlightjs.org/) (which Scrype uses internally):
+
+```typescript
+import hljs from 'highlight.js';
+import type { Replacer } from 'scrype';
+
+const pythonReplacer: Replacer = (code: string) => {
+  return hljs.highlight(code, { language: 'python' }).value;
+};
+
+const options: ScrypeOptions = {
+  code: "print('Hello from Python!')",
+  replacer: pythonReplacer,
+  // other options...
+};
+```
+
 ## *Syntax Highlighting Themes*
 
 Scrype includes pre-built themes for syntax highlighting. Import a theme CSS file:
@@ -126,6 +145,8 @@ import 'scrype/themes/github-dark.min.css';
 import 'scrype/themes/github-light.min.css';
 // ... other available themes
 ```
+
+For a complete list of available themes, visit the [Highlight.js styles repository](https://github.com/highlightjs/highlight.js/tree/main/src/styles).
 
 ## *TypeScript Support*
 
@@ -148,4 +169,4 @@ Currently supported languages for built-in syntax highlighting:
 - `javascript` 
 - `html`
 
-For other languages, provide a custom `replacer` function.
+For other languages, use the custom `replacer` function with [Highlight.js](https://highlightjs.org/) which supports 190+ languages and 97 styles.
