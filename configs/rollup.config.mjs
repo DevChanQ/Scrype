@@ -2,7 +2,7 @@ import terser from "@rollup/plugin-terser";
 import { nodeResolve } from "@rollup/plugin-node-resolve";
 import commonjs from "@rollup/plugin-commonjs";
 
-import defaultConfig, { tsPlugin } from "./common";
+import defaultConfig, { tsPlugin } from "./common.mjs";
 
 export default [
   ...defaultConfig,
