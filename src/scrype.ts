@@ -23,7 +23,28 @@ export interface ScrypeOptions {
 }
 
 export default class Scrype {
+  private selector: string | HTMLElement;
+  private options: ScrypeOptions;
+  private replacer: Replacer;
+  private ele: HTMLElement;
+  private code: string;
+  private onProgress: (progress: number) => void;
+  private codeContainerSelector: string | null;
+  private position: "top" | "center" | "bottom";
+  private pixelPerStep: number;
+  private padding: number;
+  private removeCharacter: string;
+  private container: HTMLElement;
+  private item: HTMLElement;
+  private codeEle: HTMLElement;
+  private totalPixel: number;
+  private currentStep: number = 0;
+  private noMore: boolean = false;
+
   constructor(selector: string | HTMLElement, options: ScrypeOptions = {}) {
+    this.selector = selector;
+    this.options = options;
+
     const {
       code = "null",
       onProgress = () => {},
@@ -35,17 +56,25 @@ export default class Scrype {
       replacer: providedReplacer,
     } = options;
 
-    let replacer: Replacer = providedReplacer;
-    if (!replacer) {
+    this.code = code;
+    this.onProgress = onProgress;
+    this.codeContainerSelector = codeContainerSelector;
+    this.position = position;
+    this.pixelPerStep = pixelPerStep;
+    this.padding = padding;
+    this.removeCharacter = removeCharacter;
+
+    this.replacer = providedReplacer;
+    if (!this.replacer) {
       switch (options.lang) {
         case "typescript":
-          replacer = typescript_replacer;
+          this.replacer = typescript_replacer;
           break;
         case "javascript":
-          replacer = javascript_replacer;
+          this.replacer = javascript_replacer;
           break;
         case "html":
-          replacer = html_replacer;
+          this.replacer = html_replacer;
           break;
         default:
           throw new Error(
@@ -54,71 +83,80 @@ export default class Scrype {
       }
     }
 
-    const ele =
+    this.ele =
       typeof selector === "string"
         ? document.querySelector(selector)
         : selector;
-    let noMore = false;
 
+    this.totalPixel = this.code.length * this.pixelPerStep;
+
+    this.setup();
+  }
+
+  private setup(): void {
     // remove all occurrences of a character from a string
-    function replaceCode(c: string, character: string): string {
+    const replaceCode = (c: string, character: string): string => {
       let index = c.indexOf(character);
       while (index !== -1) {
         c = c.slice(0, index - 1) + c.slice(index + 1);
         index = c.indexOf(character);
       }
       return c;
-    }
+    };
 
     // onscroll callback
-    function onScroll() {
-      currentStep = Math.max(window.pageYOffset - container.offsetTop, 0);
-      const pos = Math.floor(currentStep / pixelPerStep);
-      if (pos > code.length) {
-        if (!noMore) {
-          const chars = replacer(replaceCode(code, removeCharacter));
-          codeEle.innerHTML = chars + "_";
-          onProgress(100);
-          noMore = true;
+    const onScroll = () => {
+      this.currentStep = Math.max(
+        window.pageYOffset - this.container.offsetTop,
+        0,
+      );
+      const pos = Math.floor(this.currentStep / this.pixelPerStep);
+      if (pos > this.code.length) {
+        if (!this.noMore) {
+          const chars = this.replacer(
+            replaceCode(this.code, this.removeCharacter),
+          );
+          this.codeEle.innerHTML = chars + "_";
+          this.onProgress(100);
+          this.noMore = true;
         }
       } else {
-        noMore = false;
-        const chars = replacer(
-          replaceCode(code.slice(0, pos), removeCharacter),
+        this.noMore = false;
+        const chars = this.replacer(
+          replaceCode(this.code.slice(0, pos), this.removeCharacter),
         );
-        onProgress(Math.round((pos / code.length) * 100));
-        codeEle.innerHTML = chars + "_";
+        this.onProgress(Math.round((pos / this.code.length) * 100));
+        this.codeEle.innerHTML = chars + "_";
       }
-    }
+    };
 
-    function setItemPosition() {
-      switch (position) {
+    const setItemPosition = () => {
+      switch (this.position) {
         case "center":
-          item.style.cssText = `position: sticky;position: -webkit-sticky;top: calc(50% - ${item.clientHeight / 2}px);`;
+          this.item.style.cssText = `position: sticky;position: -webkit-sticky;top: calc(50% - ${this.item.clientHeight / 2}px);`;
           break;
         case "bottom":
-          item.style.cssText = `position: sticky;position: -webkit-sticky;top: calc(100% - ${item.clientHeight + 50}px);`;
+          this.item.style.cssText = `position: sticky;position: -webkit-sticky;top: calc(100% - ${this.item.clientHeight + 50}px);`;
           break;
         case "top":
-          item.style.cssText = `position: sticky;position: -webkit-sticky;top: 0;);`;
+          this.item.style.cssText = `position: sticky;position: -webkit-sticky;top: 0;);`;
           break;
         default:
-          item.style.cssText = `position: sticky;position: -webkit-sticky;top: 0;);`;
+          this.item.style.cssText = `position: sticky;position: -webkit-sticky;top: 0;);`;
           break;
       }
-    }
-
-    const totalPixel = code.length * pixelPerStep;
-    let currentStep = 0;
+    };
 
     // create container
-    const container = document.createElement("div");
-    container.className = "scrype__container";
+    this.container = document.createElement("div");
+    this.container.className = "scrype__container";
 
     // create sticky item
-    const item = document.createElement("div");
-    item.className = "scrype__item";
-    item.innerHTML = ele.innerHTML;
+    this.item = document.createElement("div");
+    this.item.className = "scrype__item";
+    while (this.ele.firstChild) {
+      this.item.appendChild(this.ele.firstChild);
+    }
 
     // create snippet container
     const snippet = document.createElement("div");
@@ -131,36 +169,40 @@ export default class Scrype {
     codeContainer.style.cssText = "position: relative;";
 
     // create code element
-    const codeEle = document.createElement("code");
-    codeEle.style.cssText =
+    this.codeEle = document.createElement("code");
+    this.codeEle.style.cssText =
       "color: white;white-space: pre;position: absolute; top: 0; left: 0;right: 0;bottom: 0;";
 
     // create code placeholder element
     const placeholder = document.createElement("code");
     placeholder.style.cssText = "white-space: pre;opacity: 0;";
-    placeholder.innerHTML = replaceCode(code, removeCharacter);
+    placeholder.innerHTML = replaceCode(this.code, this.removeCharacter);
 
     // setup element
     codeContainer.appendChild(placeholder);
-    codeContainer.appendChild(codeEle);
+    codeContainer.appendChild(this.codeEle);
     snippet.appendChild(codeContainer);
-    if (codeContainerSelector) {
+    if (this.codeContainerSelector) {
       setTimeout(() => {
-        const c = document.querySelector(codeContainerSelector);
+        const c = document.querySelector(this.codeContainerSelector);
         c.appendChild(snippet);
       }, 0);
-    } else item.appendChild(snippet);
+    } else this.item.appendChild(snippet);
 
-    container.appendChild(item);
+    this.container.appendChild(this.item);
 
-    ele.innerHTML = "";
-    ele.appendChild(container);
+    this.ele.innerHTML = "";
+    this.ele.appendChild(this.container);
 
-    container.style.height = `${window.innerHeight + totalPixel + padding}px`;
+    this.container.style.height = `${window.innerHeight + this.totalPixel + this.padding}px`;
 
     // Event Listeners
-    setItemPosition();
+    // setItemPosition();
     window.addEventListener("scroll", onScroll);
     onScroll();
+
+    setTimeout(() => {
+      setItemPosition();
+    }, 0);
   }
 }
