@@ -125,7 +125,7 @@ export default class Scrype {
         const chars = this.replacer(
           replaceCode(this.code.slice(0, pos), this.removeCharacter),
         );
-        this.onProgress(Math.round((pos / this.code.length) * 100));
+        this.onProgress((pos / this.code.length) * 100);
         this.codeEle.innerHTML = chars + "_";
       }
     };
